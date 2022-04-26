@@ -1,0 +1,50 @@
+{
+  "name": "passwordless",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:MatiToledo/vercel-public-directory.git",
+  "author": "Mati Toledo <toledo.matias@icloud.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next",
+    "test": "ava"
+  },
+  "ava": {
+    "nodeArguments": [
+      "--loader=esbuild-node-loader",
+      "--experimental-specifier-resolution=node"
+    ],
+    "environmentVariables": {
+      "TESTING": "true",
+      "JWT_SECRET": "Esto es secreto"
+    },
+    "extensions": {
+      "ts": "module"
+    }
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^7.6.2",
+    "airtable": "^0.11.2",
+    "algoliasearch": "^4.13.0",
+    "ava": "^4.2.0",
+    "date-fns": "^2.28.0",
+    "esbuild-node-loader": "^0.8.0",
+    "firebase-admin": "^10.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "mercadopago": "^1.5.12",
+    "micro-method-router": "^0.1.0",
+    "next": "^12.1.1",
+    "parse-bearer-token": "^1.0.1",
+    "random-seed": "^0.3.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "@types/react": "^17.0.43",
+    "typescript": "^4.6.3"
+  }
+}
