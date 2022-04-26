@@ -10,11 +10,15 @@ type createOrderRes = {
 type orderData = {
   userId: string;
   productId: string;
-  additionalInfo?: object;
+  additionalInfo?: {
+    quantity: number;
+    color: string;
+    address: string;
+  };
 };
 
 export async function createOrderAndPreference(data: orderData) {
-  const product = await getProducById(data.productId);
+  const product: any = await getProducById(data.productId);
 
   if (!product) {
     throw "El producto no existe";
