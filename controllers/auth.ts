@@ -36,20 +36,20 @@ export async function sendCode(email: string) {
   auth.data.code = code;
   auth.data.expired = twentyMinFromNow;
   await auth.push();
-  // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  // const msg = {
-  //   to: email,
-  //   from: "toledo.nicolas.matias@gmail.com",
-  //   subject: `Código de inicio de sesion`,
-  //   text: `Su código para inicar sesion es: ${code}`,
-  // };
-  // sgMail
-  //   .send(msg)
-  //   .then(() => {
-  //     return true;
-  //   })
-  //   .catch((error) => {
-  //     return error;
-  //   });
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
+    to: email,
+    from: "toledo.nicolas.matias@gmail.com",
+    subject: `Código de inicio de sesion`,
+    text: `Su código para inicar sesion es: ${code}`,
+  };
+  sgMail
+    .send(msg)
+    .then(() => {
+      return true;
+    })
+    .catch((error) => {
+      return error;
+    });
   return auth;
 }

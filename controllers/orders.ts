@@ -122,15 +122,9 @@ export async function listenMerchantOrder(id, topic) {
         myOrder.data.externalOrder = order;
         await myOrder.push();
 
-        // airtableBase("Orders").update([
-        //   {
-        //     id: myOrder.id,
-        //     fields: {
-        //       id: myOrder.id,
-        //       status: "paid",
-        //     },
-        //   },
-        // ]);
+        airtableBase("Orders").update(myOrder.id, {
+          status: "paid",
+        });
 
         const user = await getUserData(myOrder.data.userId);
 
@@ -140,8 +134,9 @@ export async function listenMerchantOrder(id, topic) {
           to: user.email,
           from: "toledo.nicolas.matias@gmail.com",
           subject: `Tu pago fue confirmado`,
-          text: `Se confirmo con exito el pago de ${myOrder.data.productName}. /n 
-        Se entregara en ${myOrder.data.additionalInfo.address}`,
+          text: `Se confirmo con exito el pago de ${myOrder.data.productName}. 
+        
+          Se entregara en ${myOrder.data.additionalInfo.address}.`,
         };
         sgMail
           .send(msg)
@@ -151,8 +146,10 @@ export async function listenMerchantOrder(id, topic) {
           .catch((error) => {
             return error;
           });
+        return true;
       } catch (error) {
         console.error(error);
+        return false;
       }
     }
   }
