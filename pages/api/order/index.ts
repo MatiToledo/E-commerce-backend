@@ -4,13 +4,14 @@
 
 import * as yup from "yup";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { authMiddleware } from "lib/middlewares";
+import { authMiddleware, validateQueryAndBody } from "lib/middlewares";
 import methods from "micro-method-router";
 import { createOrderAndPreference } from "controllers/orders";
 
 let querySchema = yup.object().shape({
   productId: yup.string().required(),
 });
+
 let bodySchema = yup
   .object()
   .shape({
@@ -26,17 +27,6 @@ export async function postHandler(
   res: NextApiResponse,
   token
 ) {
-  try {
-    await querySchema.validate(req.query);
-  } catch (error) {
-    res.status(406).send({ field: "query", message: error });
-  }
-  try {
-    await bodySchema.validate(req.body);
-  } catch (error) {
-    res.status(406).send({ field: "body", message: error });
-  }
-
   const order = await createOrderAndPreference({
     userId: token.userId,
     productId: req.query.productId as string,
@@ -49,4 +39,6 @@ const handler = methods({
   post: postHandler,
 });
 
-export default authMiddleware(handler);
+const auth = authMiddleware(handler);
+
+export default validateQueryAndBody(bodySchema, querySchema, auth);

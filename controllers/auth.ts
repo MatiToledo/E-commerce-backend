@@ -4,7 +4,7 @@ import addMinutes from "date-fns/addMinutes";
 import gen from "random-seed";
 import sgMail from "@sendgrid/mail";
 
-var seed = "Secreto random-seed";
+var seed = process.env.SED_SECRET;
 var random = gen.create(seed);
 
 export async function findOrCreateAuth(data) {

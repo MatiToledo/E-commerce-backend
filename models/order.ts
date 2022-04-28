@@ -2,6 +2,8 @@ import { firestore } from "../lib/firestore";
 
 //HACER TIPERO DE ORDER DATA (TYPE)
 type orderData = {
+  createdAt: Date;
+  productName: string;
   userId: string;
   productId: string;
   additionalInfo?: object;
@@ -28,7 +30,6 @@ export class Order {
     const newOrderSnap = await collection.add(data);
     const newOrder = new Order(newOrderSnap.id);
     newOrder.data = data;
-    newOrder.data.createdAt = new Date();
     return newOrder;
   }
   ////////////////////////////////////////////////////////////////////////////

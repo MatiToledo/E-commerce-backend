@@ -2,6 +2,8 @@ import * as yup from "yup";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getProducById } from "controllers/products";
+import methods from "micro-method-router";
+import { validateQuery } from "lib/middlewares";
 
 let querySchema = yup
   .object()
@@ -11,12 +13,13 @@ let querySchema = yup
   .noUnknown(true)
   .strict();
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
-  try {
-    await querySchema.validate(req.query);
-  } catch (error) {
-    res.status(406).send({ field: "query", message: error });
-  }
+export async function getHandler(req: NextApiRequest, res: NextApiResponse) {
   const product = await getProducById(req.query.productId as string);
   res.send(product);
 }
+
+const handler = methods({
+  get: getHandler,
+});
+
+export default validateQuery(querySchema, handler);

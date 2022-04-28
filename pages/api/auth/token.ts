@@ -6,9 +6,9 @@ import * as yup from "yup";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { Auth } from "models/auth";
-import { findOrCreateAuth } from "controllers/auth";
 import { generate } from "lib/jwt";
 import methods from "micro-method-router";
+import { validateBody } from "lib/middlewares";
 
 let bodySchema = yup
   .object()
@@ -20,12 +20,6 @@ let bodySchema = yup
   .strict();
 
 async function postHandler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    await bodySchema.validate(req.body);
-  } catch (error) {
-    res.status(406).send({ field: "body", message: error });
-  }
-
   const auth = await Auth.findEmailAndCode(req.body.email, req.body.code);
 
   if (!auth) {
@@ -45,6 +39,8 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
   res.send({ token });
 }
 
-export default methods({
+const handler = methods({
   post: postHandler,
 });
+
+export default validateBody(bodySchema, handler);

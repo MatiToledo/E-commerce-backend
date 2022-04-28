@@ -6,6 +6,7 @@ import methods from "micro-method-router";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { findOrCreateAuth } from "controllers/auth";
 import { sendCode } from "controllers/auth";
+import { validateBody } from "lib/middlewares";
 
 let bodySchema = yup
   .object()
@@ -17,17 +18,13 @@ let bodySchema = yup
   .strict();
 
 async function postHandler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    await bodySchema.validate(req.body);
-  } catch (error) {
-    res.status(406).send({ field: "body", message: error });
-  }
-
   const find = await findOrCreateAuth(req.body);
   const auth = await sendCode(req.body.email);
   res.send(auth);
 }
 
-export default methods({
+const handler = methods({
   post: postHandler,
 });
+
+export default validateBody(bodySchema, handler);
