@@ -37,21 +37,34 @@ export async function createOrderAndPreference(data: orderData) {
     ...data,
   });
 
-  airtableBase("Orders").create([
-    {
-      fields: {
-        name: product.Name,
-        createdAt: order.data.createdAt,
-        id: order.id,
-        status: "pending",
-        product: product.Code,
-        quantity: data.additionalInfo.quantity,
-        price: product.unit_price,
-        address: order.data.additionalInfo.address,
-        userId: order.data.userId,
+  airtableBase("Orders").create(
+    [
+      {
+        fields: {
+          name: product.Name,
+          createdAt: order.data.createdAt,
+          id: order.id,
+          status: "pending",
+          product: product.Code,
+          quantity: data.additionalInfo.quantity,
+          price: product.unit_price,
+          address: order.data.additionalInfo.address,
+          userId: order.data.userId,
+        },
       },
-    },
-  ]);
+    ],
+    function (err, record) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      try {
+        order.updateAirtableId(record[0].id);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  );
 
   const pref = await createPreference({
     items: [product],
@@ -121,32 +134,43 @@ export async function listenMerchantOrder(id, topic) {
         myOrder.data.status = "closed";
         myOrder.data.externalOrder = order;
         await myOrder.push();
+        console.log(myOrder);
 
-        airtableBase("Orders").update(myOrder.id, {
-          status: "paid",
-        });
+        airtableBase("Orders").update(
+          myOrder.data.airtableId,
+          {
+            status: "paid",
+          },
+          function (err, record) {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            console.log(record.get("id"));
+          }
+        );
 
-        const user = await getUserData(myOrder.data.userId);
+        //     const user = await getUserData(myOrder.data.userId);
 
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        //     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-        const msg = {
-          to: user.email,
-          from: "toledo.nicolas.matias@gmail.com",
-          subject: `Tu pago fue confirmado`,
-          text: `Se confirmo con exito el pago de ${myOrder.data.productName}. 
-        
-          Se entregara en ${myOrder.data.additionalInfo.address}.`,
-        };
-        sgMail
-          .send(msg)
-          .then(() => {
-            return true;
-          })
-          .catch((error) => {
-            return error;
-          });
-        return true;
+        //     const msg = {
+        //       to: user.email,
+        //       from: "toledo.nicolas.matias@gmail.com",
+        //       subject: `Tu pago fue confirmado`,
+        //       text: `Se confirmo con exito el pago de ${myOrder.data.productName}.
+
+        //       Se entregara en ${myOrder.data.additionalInfo.address}.`,
+        //     };
+        //     sgMail
+        //       .send(msg)
+        //       .then(() => {
+        //         return true;
+        //       })
+        //       .catch((error) => {
+        //         return error;
+        //       });
+        //     return true;
       } catch (error) {
         console.error(error);
         return false;

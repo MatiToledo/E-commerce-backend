@@ -36,7 +36,7 @@ export class Order {
   static async getOrdersByUserId(userId: string) {
     const search = await collection.where("userId", "==", userId).get();
     if (search.empty) {
-      console.error("Este usuario no tiene ordenes");
+      return "Este usuario no tiene ordenes";
       return null;
     } else {
       const orders = [];
@@ -52,5 +52,10 @@ export class Order {
   static async getOrderById(orderId: string) {
     const order = await collection.doc(orderId).get();
     return order.data();
+  }
+  ////////////////////////////////////////////////////////////////////////////
+  async updateAirtableId(id) {
+    this.data.airtableId = id;
+    await this.push();
   }
 }

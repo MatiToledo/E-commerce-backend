@@ -4,9 +4,6 @@ import * as yup from "yup";
 import methods from "micro-method-router";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { authMiddleware } from "lib/middlewares";
-import { getUserData } from "controllers/users";
-import { User } from "models/user";
-import { Auth } from "models/auth";
 import { getOrdersByUserId } from "controllers/orders";
 
 let bodySchema = yup
