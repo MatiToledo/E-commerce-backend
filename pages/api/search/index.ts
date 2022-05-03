@@ -17,7 +17,7 @@ let querySchema = yup
   .strict();
 
 export async function getHandler(req: NextApiRequest, res: NextApiResponse) {
-  const { limit, offset } = getOffsetAndLimit(req);
+  const { limit, offset } = getOffsetAndLimit(req.query);
   const pagination = await getPagination(req.query.q, limit, offset);
   res.send(pagination);
 }

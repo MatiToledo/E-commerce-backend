@@ -5,7 +5,7 @@ import * as yup from "yup";
 import methods from "micro-method-router";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { authMiddleware, validateBody } from "lib/middlewares";
-import { User } from "models/user";
+import { modifyData } from "controllers/users";
 
 let bodySchema = yup
   .object()
@@ -16,7 +16,7 @@ let bodySchema = yup
   .strict();
 
 async function patchHandler(req: NextApiRequest, res: NextApiResponse, token) {
-  const user = await User.modifyData(req.body, token.userId);
+  const user = await modifyData(req.body, token.userId);
 
   res.status(200).send(user);
 }

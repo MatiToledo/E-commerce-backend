@@ -4,11 +4,10 @@
 import * as yup from "yup";
 
 import type { NextApiRequest, NextApiResponse } from "next";
-
-import { Auth } from "models/auth";
 import { generate } from "lib/jwt";
 import methods from "micro-method-router";
 import { validateBody } from "lib/middlewares";
+import { findEmailAndCode } from "controllers/auth";
 
 let bodySchema = yup
   .object()
@@ -20,7 +19,7 @@ let bodySchema = yup
   .strict();
 
 async function postHandler(req: NextApiRequest, res: NextApiResponse) {
-  const auth = await Auth.findEmailAndCode(req.body.email, req.body.code);
+  const auth = await findEmailAndCode(req.body.email, req.body.code);
 
   if (!auth) {
     res.status(401).send("Email or code incorrect");

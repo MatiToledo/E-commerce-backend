@@ -1,10 +1,10 @@
+import { sendgridEmail } from "lib/sendgrid";
 import { getProducById } from "controllers/products";
 import { createPreference } from "lib/mercadopago";
 import { Order } from "models/order";
 import { airtableBase } from "lib/airtable";
 import { orderIndex } from "lib/algolia";
 import { getUserData } from "controllers/users";
-import sgMail from "@sendgrid/mail";
 import { getMerchantOrder } from "lib/mercadopago";
 
 type createOrderRes = {
@@ -150,27 +150,20 @@ export async function listenMerchantOrder(id, topic) {
           }
         );
 
-        //     const user = await getUserData(myOrder.data.userId);
+        const user = await getUserData(myOrder.data.userId);
 
-        //     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        const msg = {
+          to: user.email,
+          from: "toledo.nicolas.matias@gmail.com",
+          subject: `Tu pago fue confirmado`,
+          text: `Se confirmo con exito el pago de ${myOrder.data.productName}.
 
-        //     const msg = {
-        //       to: user.email,
-        //       from: "toledo.nicolas.matias@gmail.com",
-        //       subject: `Tu pago fue confirmado`,
-        //       text: `Se confirmo con exito el pago de ${myOrder.data.productName}.
+              Se entregara en ${myOrder.data.additionalInfo.address}.`,
+        };
 
-        //       Se entregara en ${myOrder.data.additionalInfo.address}.`,
-        //     };
-        //     sgMail
-        //       .send(msg)
-        //       .then(() => {
-        //         return true;
-        //       })
-        //       .catch((error) => {
-        //         return error;
-        //       });
-        //     return true;
+        await sendgridEmail(msg);
+
+        return true;
       } catch (error) {
         console.error(error);
         return false;

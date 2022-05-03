@@ -2,7 +2,7 @@ import { Auth } from "models/auth";
 import { User } from "models/user";
 import addMinutes from "date-fns/addMinutes";
 import gen from "random-seed";
-import sgMail from "@sendgrid/mail";
+import { sendgridEmail } from "lib/sendgrid";
 
 var seed = process.env.SED_SECRET;
 var random = gen.create(seed);
@@ -27,6 +27,16 @@ export async function findOrCreateAuth(data) {
   }
 }
 
+export async function findEmailAndCode(email: string, code: number) {
+  const auth = await Auth.findEmailAndCode(email, code);
+  return auth;
+}
+
+export async function modifyAuthEmail(email: string, id: string) {
+  const auth = await Auth.modifyAuthEmail(email, id);
+  return auth;
+}
+
 export async function sendCode(email: string) {
   const cleanEmail = email.trim().toLowerCase();
   const auth = await findOrCreateAuth({ email: cleanEmail });
@@ -36,20 +46,15 @@ export async function sendCode(email: string) {
   auth.data.code = code;
   auth.data.expired = twentyMinFromNow;
   await auth.push();
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
   const msg = {
     to: email,
     from: "toledo.nicolas.matias@gmail.com",
     subject: `Código de inicio de sesion`,
     text: `Su código para inicar sesion es: ${code}`,
   };
-  sgMail
-    .send(msg)
-    .then(() => {
-      return true;
-    })
-    .catch((error) => {
-      return error;
-    });
+
+  await sendgridEmail(msg);
+
   return auth;
 }
