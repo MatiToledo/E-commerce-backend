@@ -20,7 +20,7 @@ let bodySchema = yup
 async function postHandler(req: NextApiRequest, res: NextApiResponse) {
   const find = await findOrCreateAuth(req.body);
   const auth = await sendCode(req.body.email);
-  res.send(auth);
+  res.status(200).send({ email: auth.data.email, code: auth.data.code });
 }
 
 const handler = methods({
