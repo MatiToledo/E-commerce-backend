@@ -21,6 +21,22 @@ export async function getProducById(id: string) {
   return product;
 }
 
+export async function getProducByType(type: string) {
+  const results: any = await productIndex.search("", {
+    hitsPerPage: 1000,
+  });
+
+  const products = [];
+  for (const p of results.hits) {
+    console.log(p.Type);
+
+    if (p.Type == type) {
+      products.push(p);
+    }
+  }
+  return { products, nbHits: products.length };
+}
+
 export async function syncProducts() {
   try {
     airtableBase("Products")
