@@ -3,7 +3,7 @@ import { airtableBase } from "lib/airtable";
 
 export async function getPagination(q, limit, offset) {
   const results = await productIndex.search((q as string) || "", {
-    hitsPerPage: limit,
+    length: limit,
     offset,
   });
   return {
