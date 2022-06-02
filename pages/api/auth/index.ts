@@ -12,7 +12,7 @@ let bodySchema = yup
   .object()
   .shape({
     email: yup.string().required(),
-    address: yup.string().required(),
+    address: yup.string(),
   })
   .noUnknown(true)
   .strict();
