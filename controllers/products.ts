@@ -16,6 +16,13 @@ export async function getPagination(q, limit, offset) {
   };
 }
 
+export async function getAllProducts() {
+  const products: any = await productIndex.search("", {
+    hitsPerPage: 1000,
+  });
+  return products;
+}
+
 export async function getProducById(id: string) {
   const product = await productIndex.getObject(id);
   return product;
