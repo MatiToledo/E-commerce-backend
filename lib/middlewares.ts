@@ -11,10 +11,9 @@ const cors = Cors({
 export function corsMiddleware(req, res, cb) {
   return new Promise((resolve, reject) => {
     cors(req, res, (result) => {
-      console.log(result instanceof Error);
       if (result instanceof Error) return reject(result);
+      console.log("CORS", Cors);
       cb(req, res);
-
       return resolve(result);
     });
   });
@@ -62,6 +61,8 @@ export function validateBody(bodySchema, callback) {
     if (req.body !== "") {
       try {
         await bodySchema.validate(req.body);
+        console.log(callback);
+
         callback(req, res);
       } catch (e) {
         res.status(422).send({ field: "body", message: e });
