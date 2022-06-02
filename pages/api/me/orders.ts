@@ -3,7 +3,7 @@
 import * as yup from "yup";
 import methods from "micro-method-router";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { authMiddleware, corsMiddleware, validateBody } from "lib/middlewares";
+import { authMiddleware, validateBody } from "lib/middlewares";
 import { getOrdersByUserId } from "controllers/orders";
 
 let bodySchema = yup
@@ -26,8 +26,8 @@ const handler = methods({
 
 const auth = authMiddleware(handler);
 
-const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await corsMiddleware(req, res, validateBody(bodySchema, auth));
-};
+// const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+//   await corsMiddleware(req, res, validateBody(bodySchema, auth));
+// };
 
-export default corsHandler;
+export default validateBody(bodySchema, auth);

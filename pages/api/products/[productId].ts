@@ -3,7 +3,7 @@ import * as yup from "yup";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getProducById } from "controllers/products";
 import methods from "micro-method-router";
-import { corsMiddleware, validateQuery } from "lib/middlewares";
+import { validateQuery } from "lib/middlewares";
 
 let querySchema = yup
   .object()
@@ -22,8 +22,8 @@ const handler = methods({
   get: getHandler,
 });
 
-const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await corsMiddleware(req, res, validateQuery(querySchema, handler));
-};
+// const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+//   await corsMiddleware(req, res, validateQuery(querySchema, handler));
+// };
 
-export default corsHandler;
+export default validateQuery(querySchema, handler);

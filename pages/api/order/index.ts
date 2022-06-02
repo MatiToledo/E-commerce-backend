@@ -4,11 +4,7 @@
 
 import * as yup from "yup";
 import type { NextApiRequest, NextApiResponse } from "next";
-import {
-  authMiddleware,
-  corsMiddleware,
-  validateQueryAndBody,
-} from "lib/middlewares";
+import { authMiddleware, validateQueryAndBody } from "lib/middlewares";
 import methods from "micro-method-router";
 import { createOrderAndPreference } from "controllers/orders";
 
@@ -45,12 +41,12 @@ const handler = methods({
 
 const auth = authMiddleware(handler);
 
-const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await corsMiddleware(
-    req,
-    res,
-    validateQueryAndBody(bodySchema, querySchema, auth)
-  );
-};
+// const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+//   await corsMiddleware(
+//     req,
+//     res,
+//     validateQueryAndBody(bodySchema, querySchema, auth)
+//   );
+// };
 
-export default corsHandler;
+export default validateQueryAndBody(bodySchema, querySchema, auth);

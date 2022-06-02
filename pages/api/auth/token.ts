@@ -6,7 +6,7 @@ import * as yup from "yup";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { generate } from "lib/jwt";
 import methods from "micro-method-router";
-import { corsMiddleware, validateBody } from "lib/middlewares";
+import { validateBody } from "lib/middlewares";
 import { findEmailAndCode } from "controllers/auth";
 
 let bodySchema = yup
@@ -42,8 +42,8 @@ const handler = methods({
   post: postHandler,
 });
 
-const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await corsMiddleware(req, res, validateBody(bodySchema, handler));
-};
+// const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+//   await corsMiddleware(req, res, validateBody(bodySchema, handler));
+// };
 
-export default corsHandler;
+export default validateBody(bodySchema, handler);
