@@ -2,6 +2,21 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import * as yup from "yup";
 import { decode } from "lib/jwt";
 import parseToken from "parse-bearer-token";
+import Cors from "cors";
+
+const cors = Cors({
+  methods: ["GET", "POST", "PATCH"],
+});
+
+export function corsMiddleware(req, res, cb) {
+  return new Promise((resolve, reject) => {
+    cors(req, res, (result) => {
+      if (result instanceof Error) return reject(result);
+      cb(req, res);
+      return resolve(result);
+    });
+  });
+}
 
 export function authMiddleware(callback) {
   return function (req: NextApiRequest, res: NextApiResponse) {

@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import methods from "micro-method-router";
 import { getOffsetAndLimit } from "lib/requests";
 import { getPagination } from "controllers/products";
-import { validateQuery } from "lib/middlewares";
+import { corsMiddleware, validateQuery } from "lib/middlewares";
 
 let querySchema = yup
   .object()
@@ -26,4 +26,8 @@ const handler = methods({
   get: getHandler,
 });
 
-export default validateQuery(querySchema, handler);
+const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await corsMiddleware(req, res, validateQuery(querySchema, handler));
+};
+
+export default corsHandler;

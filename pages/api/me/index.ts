@@ -1,6 +1,6 @@
 // Devuelve info del user asociado a ese token
 
-import { validateBody } from "lib/middlewares";
+import { corsMiddleware, validateBody } from "lib/middlewares";
 import * as yup from "yup";
 import methods from "micro-method-router";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -38,4 +38,8 @@ const handler = methods({
 
 const auth = authMiddleware(handler);
 
-export default validateBody(bodySchema, auth);
+const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await corsMiddleware(req, res, validateBody(bodySchema, auth));
+};
+
+export default corsHandler;
