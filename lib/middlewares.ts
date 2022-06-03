@@ -38,7 +38,7 @@ export default function initMiddleware(middleware) {
 
 export function authMiddleware(callback) {
   return async function (req: NextApiRequest, res: NextApiResponse) {
-    // await cors(req, res);
+    await cors(req, res);
     const token = parseToken(req);
     if (!token) {
       res.status(401).send({ message: "No hay token" });
@@ -57,7 +57,7 @@ export function validateBody(bodySchema, callback) {
     req: NextApiRequest,
     res: NextApiResponse
   ): Promise<void> {
-    // await cors(req, res);
+    await cors(req, res);
     if (req.body !== "") {
       try {
         await bodySchema.validate(req.body);
@@ -75,7 +75,7 @@ export function validateBody(bodySchema, callback) {
 
 export function validateQuery(bodySchema, callback) {
   return async function (req: NextApiRequest, res: NextApiResponse) {
-    // await cors(req, res);
+    await cors(req, res);
     try {
       await bodySchema.validate(req.query);
       callback(req, res);

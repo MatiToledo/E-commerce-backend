@@ -18,8 +18,6 @@ let bodySchema = yup
   .strict();
 
 async function postHandler(req: NextApiRequest, res: NextApiResponse) {
-  console.log("POSTHANDLER");
-
   const find = await findOrCreateAuth(req.body);
   const auth = await sendCode(req.body.email);
   res.status(200).send({ email: auth.data.email, code: auth.data.code });
