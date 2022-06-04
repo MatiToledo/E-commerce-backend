@@ -21,11 +21,10 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const find = await findOrCreateAuth(req.body);
     const auth = await sendCode(req.body.email);
-    res.json({ error: false });
+    res.json({ email: auth.data.email, code: auth.data.code });
   } catch (error) {
     res.json({ error: "ERROR ENDPOINT", body: req.body });
   }
-  // res.json({ email: auth.data.email, code: auth.data.code });
 }
 
 const handler = methods({
