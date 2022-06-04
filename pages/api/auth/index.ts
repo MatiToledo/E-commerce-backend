@@ -21,11 +21,11 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const find = await findOrCreateAuth(req.body);
     const auth = await sendCode(req.body.email);
+    res.json({ error: false });
   } catch (error) {
     res.json({ error: "ERROR ENDPOINT" });
   }
   // res.json({ email: auth.data.email, code: auth.data.code });
-  res.json({ error: "EL ERROR ESTA NO ESTA EN EL TRY" });
 }
 
 const handler = methods({
