@@ -6,8 +6,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
     await syncProducts();
     await syncOrders();
-    res.send("finish");
+    res.json("finish");
   } catch (error) {
-    res.send(error);
+    res.json(error);
   }
 }
