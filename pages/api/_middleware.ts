@@ -2,6 +2,8 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   if (req.method == "OPTIONS") {
+    console.log("OPTIONS");
+
     return new Response("", {
       status: 204,
       headers: {
