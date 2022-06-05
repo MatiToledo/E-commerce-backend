@@ -16,8 +16,9 @@ async function getHandler(req: NextApiRequest, res: NextApiResponse, token) {
 let bodySchema = yup
   .object()
   .shape({
-    email: yup.string(),
+    name: yup.string(),
     address: yup.string(),
+    phone: yup.string(),
   })
   .noUnknown(true)
   .strict();
