@@ -54,7 +54,12 @@ export async function sendCode(email: string) {
     text: `Su código para inicar sesion es: ${code}`,
   };
 
-  await sendgridEmail(msg);
-
-  return auth;
+  try {
+    const codeSended = await sendgridEmail(msg);
+    if (codeSended) {
+      return auth;
+    }
+  } catch (error) {
+    return error;
+  }
 }

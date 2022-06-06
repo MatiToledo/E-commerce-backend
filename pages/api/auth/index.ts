@@ -23,7 +23,7 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
     const auth = await sendCode(req.body.email);
     res.json({ email: auth.data.email, code: auth.data.code });
   } catch (error) {
-    res.json({ error: "ERROR ENDPOINT", body: req.body });
+    res.json({ error: "ERROR ENDPOINT" });
   }
 }
 

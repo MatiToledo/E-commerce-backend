@@ -5,12 +5,13 @@ export async function sendgridEmail(msg: MailDataRequired) {
   try {
     sgMail
       .send(msg)
-      .then(() => {
-        return true;
+      .then((response) => {
+        console.log(response[0].statusCode);
       })
       .catch((error) => {
-        return error;
+        console.error(error);
       });
+    return true;
   } catch (error) {
     return error;
   }
