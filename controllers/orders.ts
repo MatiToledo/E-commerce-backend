@@ -158,7 +158,7 @@ export async function listenMerchantOrder(id, topic) {
           subject: `Tu pago fue confirmado`,
           text: `Se confirmo con exito el pago de ${myOrder.data.productName}.
 
-              Se entregara en ${myOrder.data.additionalInfo.address}.`,
+              Se entregara en ${user.address}.`,
         };
 
         await sendgridEmail(msg);
