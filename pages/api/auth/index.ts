@@ -21,6 +21,7 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const find = await findOrCreateAuth(req.body);
     const auth = await sendCode(req.body.email);
+    // res.json({ hola: "hola" });
     res.json({ email: auth.data.email, code: auth.data.code });
   } catch (error) {
     res.json({ error: "ERROR ENDPOINT" });
