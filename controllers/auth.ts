@@ -56,6 +56,8 @@ export async function sendCode(email: string) {
 
   try {
     const codeSended = await sendgridEmail(msg);
+    console.log("CODE SENDED", codeSended);
+
     if (codeSended) {
       return auth;
     }
